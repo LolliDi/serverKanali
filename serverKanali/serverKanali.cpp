@@ -64,28 +64,32 @@ int main()
             printf("\nСервер запущен!\n");
             Zap = FALSE;
         }
+        if (i == -2)
+        {
+            printf("Клиент отключен!");
+            i++;
+        }
         Connected = ConnectNamedPipe(hNamedPipe, NULL); //создаём соеднинение
         if (Connected) //проверяем соединение
         {
             if (i == -1)
             {
                 printf("\nКлиент подключился\n");
-                i = 0;
+                i++;
             }
            
             SuccessRead = ReadFile(hNamedPipe, buffer, sizeBuffer, &actualReaden, NULL);
             
-            while (!SuccessRead)
+            if (!SuccessRead)
             {
-                if (i == 100)
+                if (i == 30) //если клиент не отвечает около 30 секунд
                 {
-                    printf("\nКлиент отключился!\n");
-                    break;
+                    printf("\nКлиент долго не отвечает, повторяем подключение...\n");
+                    i = -3;
                 }
+               Sleep(1000);
                 i++;
-                SuccessRead = ReadFile(hNamedPipe, buffer, sizeBuffer, &actualReaden, NULL);
             }
-            i = -1;
             if (SuccessRead)
             {
                 printf(buffer);
@@ -135,10 +139,6 @@ int main()
                 buffer = (CHAR*)calloc(sizeBuffer, sizeof(CHAR));
             }
             CloseHandle(hNamedPipe);
-        }
-        else {
-            printf("\nКлиент отключился!\n");
-            i = -1;
         }
     }
     printf("\nСервер отключен!\n");
