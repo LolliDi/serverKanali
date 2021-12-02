@@ -128,9 +128,6 @@ int main()
                     kv = kv * kv;
                     char* op = malloc(sizeof(wchar_t) * 150);
                     sprintf(op, "%f", kv); //записываем данные в чар
-                    //wchar_t iii[150];
-                    //MultiByteToWideChar(CP_ACP, 0, op, -1, iii, SIZE_BUFFER); //перевод из чар*
-                    //buffer = iii;
                     wchar_t* w = calloc(SIZE_BUFFER,sizeof(CHAR));
                     mbstowcs(w, op, sizeBuffer);
                     buffer = w;
